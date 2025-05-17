@@ -1,5 +1,5 @@
--- Создание таблицы orders
-CREATE TABLE orders (
+-- Создание таблицы projects
+CREATE TABLE projects (
                         id VARCHAR(36) PRIMARY KEY,
                         title VARCHAR(255) NOT NULL,
                         description TEXT NOT NULL,
@@ -11,10 +11,10 @@ CREATE TABLE orders (
                         owner_id VARCHAR(36) NOT NULL
 );
 
--- Создание таблицы order_responses
-CREATE TABLE order_responses (
+-- Создание таблицы project_responses
+CREATE TABLE project_responses (
                                  id VARCHAR(36) PRIMARY KEY,
-                                 order_id VARCHAR(36) NOT NULL,
+                                 project_id VARCHAR(36) NOT NULL,
                                  freelancer_id VARCHAR(36) NOT NULL,
                                  proposal TEXT NOT NULL,
                                  price DOUBLE PRECISION NOT NULL,

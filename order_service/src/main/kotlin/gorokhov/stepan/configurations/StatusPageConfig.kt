@@ -1,6 +1,6 @@
 package gorokhov.stepan.configurations
 
-import gorokhov.stepan.domain.exceptions.HttpException
+import gorokhov.stepan.features.projects.domain.exceptions.HttpException
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*

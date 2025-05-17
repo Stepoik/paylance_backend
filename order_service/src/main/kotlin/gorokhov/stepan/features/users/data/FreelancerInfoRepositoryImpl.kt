@@ -1,0 +1,40 @@
+package gorokhov.stepan.features.users.data
+
+import gorokhov.stepan.features.users.data.mappers.toFreelancerInfo
+import gorokhov.stepan.features.users.data.tables.FreelancerInfos
+import gorokhov.stepan.features.users.domain.FreelancerInfoRepository
+import gorokhov.stepan.features.users.domain.models.FreelancerInfo
+import kotlinx.coroutines.Dispatchers
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.update
+
+class FreelancerInfoRepositoryImpl : FreelancerInfoRepository {
+    override suspend fun getFreelancerInfo(id: String): FreelancerInfo? = dbQuery {
+        FreelancerInfos
+            .selectAll()
+            .where { FreelancerInfos.freelancerId eq id }
+            .map { it.toFreelancerInfo() }
+            .singleOrNull()
+    }
+
+    override suspend fun createFreelancerInfo(freelancerInfo: FreelancerInfo): FreelancerInfo = dbQuery {
+        FreelancerInfos.insert {
+            it[freelancerId] = freelancerInfo.freelancerId
+            it[description] = freelancerInfo.description
+        }
+        freelancerInfo
+    }
+
+    override suspend fun updateFreelancerInfo(freelancerInfo: FreelancerInfo): FreelancerInfo = dbQuery {
+        FreelancerInfos.update({ FreelancerInfos.freelancerId eq freelancerInfo.freelancerId }) {
+            it[description] = freelancerInfo.description
+        }
+        freelancerInfo
+    }
+
+    private suspend fun <T> dbQuery(block: suspend () -> T): T =
+        newSuspendedTransaction(Dispatchers.IO) { block() }
+}

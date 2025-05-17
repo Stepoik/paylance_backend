@@ -1,17 +1,30 @@
 package gorokhov.stepan
 
+import com.google.firebase.auth.FirebaseAuth
 import gorokhov.stepan.configurations.*
-import gorokhov.stepan.controllers.OrderController
-import gorokhov.stepan.data.repositories.OrderRepositoryImpl
-import gorokhov.stepan.domain.services.OrderService
-import gorokhov.stepan.domain.services.RabbitMQService
+import gorokhov.stepan.features.projects.controllers.ProjectController
+import gorokhov.stepan.features.projects.controllers.ResponseController
+import gorokhov.stepan.features.projects.data.repositories.ContractRepositoryImpl
+import gorokhov.stepan.features.projects.data.repositories.ProjectRepositoryImpl
+import gorokhov.stepan.features.projects.data.repositories.ProjectResponseRepositoryImpl
+import gorokhov.stepan.features.projects.domain.repositories.ContractRepository
+import gorokhov.stepan.features.projects.domain.repositories.ProjectRepository
+import gorokhov.stepan.features.projects.domain.repositories.ProjectResponseRepository
+import gorokhov.stepan.features.projects.domain.services.ProjectService
+import gorokhov.stepan.features.projects.domain.services.ResponseService
+import gorokhov.stepan.features.users.controllers.UserController
+import gorokhov.stepan.features.users.data.FirebaseUserRepository
+import gorokhov.stepan.features.users.data.FreelancerInfoRepositoryImpl
+import gorokhov.stepan.features.users.data.ReviewRepositoryImpl
+import gorokhov.stepan.features.users.domain.FreelancerInfoRepository
+import gorokhov.stepan.features.users.domain.ReviewRepository
+import gorokhov.stepan.features.users.domain.UserRepository
+import gorokhov.stepan.features.users.domain.services.UserService
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import io.ktor.server.routing.*
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
-import org.koin.ktor.ext.inject
 
 fun main() {
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
@@ -19,25 +32,34 @@ fun main() {
 }
 
 fun Application.module() {
+    val application = this
     startKoin {
         modules(module {
-            single<Application> { this@module }
-            single { OrderController() }
-            single { OrderRepositoryImpl() }
-            single { RabbitMQService() }
-            single { OrderService(get(), get(), get(), get()) }
+            single { createFirebaseApp() }
+            single { FirebaseAuth.getInstance(get()) }
+            single<Application> { application }
+
+            single { ProjectController() }
+            single { ResponseController() }
+            single { UserController() }
+
+            single { ProjectService(get(), get()) }
+            single { UserService(get(), get(), get()) }
+            single { ResponseService(get(), get(), get(), get()) }
+
+            single<ProjectRepository> { ProjectRepositoryImpl() }
+            single<UserRepository> { FirebaseUserRepository(get()) }
+            single<ProjectResponseRepository> { ProjectResponseRepositoryImpl() }
+            single<ContractRepository> { ContractRepositoryImpl() }
+            single<FreelancerInfoRepository> { FreelancerInfoRepositoryImpl() }
+            single<ReviewRepository> { ReviewRepositoryImpl() }
         })
     }
     configureDatabases()
     configureSecurity()
     configureHTTP()
-    configureRabbitMQ()
     configureSerialization()
     configureStatusPages()
 
-    // Настройка маршрутизации
-    val orderController: OrderController by inject()
-    routing {
-        orderController.registerRoutes(this)
-    }
+    registerRoutes()
 } 
