@@ -3,6 +3,7 @@ package gorokhov.stepan.features.projects.controllers.models
 import gorokhov.stepan.configurations.serializers.LocalDateTimeSerializer
 import gorokhov.stepan.features.projects.domain.models.ProjectStatus
 import gorokhov.stepan.features.projects.domain.models.ProjectWithAuthor
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
@@ -20,6 +21,7 @@ data class ProjectDto(
     val createdAt: LocalDateTime,
     @Serializable(with = LocalDateTimeSerializer::class)
     val updatedAt: LocalDateTime,
+    val isRespond: Boolean
 )
 
 fun ProjectWithAuthor.toDto(): ProjectDto {
@@ -33,5 +35,6 @@ fun ProjectWithAuthor.toDto(): ProjectDto {
         status = project.status,
         createdAt = project.createdAt,
         updatedAt = project.updatedAt,
+        isRespond = isRespond
     )
 }

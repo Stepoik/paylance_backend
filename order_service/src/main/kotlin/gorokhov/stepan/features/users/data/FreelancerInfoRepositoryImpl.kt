@@ -5,7 +5,7 @@ import gorokhov.stepan.features.users.data.tables.FreelancerInfos
 import gorokhov.stepan.features.users.domain.FreelancerInfoRepository
 import gorokhov.stepan.features.users.domain.models.FreelancerInfo
 import kotlinx.coroutines.Dispatchers
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -24,6 +24,7 @@ class FreelancerInfoRepositoryImpl : FreelancerInfoRepository {
         FreelancerInfos.insert {
             it[freelancerId] = freelancerInfo.freelancerId
             it[description] = freelancerInfo.description
+            it[skills] = Json.encodeToString(freelancerInfo.skills)
         }
         freelancerInfo
     }

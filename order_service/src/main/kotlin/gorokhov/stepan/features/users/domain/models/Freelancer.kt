@@ -8,5 +8,6 @@ data class Freelancer(
 
 data class FreelancerInfo(
     val freelancerId: String,
-    val description: String
+    val description: String,
+    val skills: List<String>
 )

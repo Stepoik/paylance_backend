@@ -51,12 +51,13 @@ class ProjectController : KoinComponent {
                     val projects = projectService.getClientProject(userId = user.id, offset = offset)
                     call.respond(GetProjectsResponse(projects.map { it.toDto() }))
                 }
-            }
 
-            get("/{id}") {
-                val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest)
-                val project = projectService.getProject(id).toDto()
-                call.respond(project)
+                get("/{id}") {
+                    val user = call.principal<AuthenticatedUser>()!!
+                    val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest)
+                    val project = projectService.getProject(projectId = id, freelancerId = user.id).toDto()
+                    call.respond(project)
+                }
             }
 
             get {

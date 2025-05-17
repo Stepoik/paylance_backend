@@ -1,5 +1,6 @@
 package gorokhov.stepan.configurations
 
+import gorokhov.stepan.features.notifications.data.database.Notifications
 import gorokhov.stepan.features.projects.data.database.Contracts
 import gorokhov.stepan.features.projects.data.database.ProjectResponses
 import gorokhov.stepan.features.projects.data.database.Projects
@@ -27,7 +28,8 @@ fun Application.configureDatabases() {
             FreelancerInfos,
             Reviews,
             Contracts,
-            ProjectResponses
+            ProjectResponses,
+            Notifications
         )
     }
 

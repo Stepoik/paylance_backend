@@ -28,5 +28,6 @@ class UserService(
 
 fun emptyFreelanceInfo(freelancerId: String) = FreelancerInfo(
     freelancerId = freelancerId,
-    description = "Пусто"
+    description = "Пусто",
+    skills = listOf()
 )

@@ -10,7 +10,7 @@ data class ResponseDto(
     val id: String,
     val projectId: String,
     val ownerId: String,
-    val freelanceId: String,
+    val freelancerId: String,
     val status: ResponseStatusDto
 )
 
@@ -31,7 +31,7 @@ fun ProjectResponse.toDto(): ResponseDto {
         id = id,
         projectId = projectId,
         ownerId = ownerId,
-        freelanceId = freelanceId,
+        freelancerId = freelanceId,
         status = status.toDto()
     )
 }

@@ -2,6 +2,10 @@ package gorokhov.stepan
 
 import com.google.firebase.auth.FirebaseAuth
 import gorokhov.stepan.configurations.*
+import gorokhov.stepan.features.notifications.controllers.NotificationController
+import gorokhov.stepan.features.notifications.data.NotificationRepositoryImpl
+import gorokhov.stepan.features.notifications.domain.repositories.NotificationRepository
+import gorokhov.stepan.features.notifications.domain.services.NotificationService
 import gorokhov.stepan.features.projects.controllers.ProjectController
 import gorokhov.stepan.features.projects.controllers.ResponseController
 import gorokhov.stepan.features.projects.data.repositories.ContractRepositoryImpl
@@ -42,10 +46,12 @@ fun Application.module() {
             single { ProjectController() }
             single { ResponseController() }
             single { UserController() }
+            single { NotificationController(get()) }
 
-            single { ProjectService(get(), get()) }
+            single { NotificationService(get()) }
+            single { ProjectService(get(), get(), get()) }
             single { UserService(get(), get(), get()) }
-            single { ResponseService(get(), get(), get(), get()) }
+            single { ResponseService(get(), get(), get(), get(), get()) }
 
             single<ProjectRepository> { ProjectRepositoryImpl() }
             single<UserRepository> { FirebaseUserRepository(get()) }
@@ -53,6 +59,7 @@ fun Application.module() {
             single<ContractRepository> { ContractRepositoryImpl() }
             single<FreelancerInfoRepository> { FreelancerInfoRepositoryImpl() }
             single<ReviewRepository> { ReviewRepositoryImpl() }
+            single<NotificationRepository> { NotificationRepositoryImpl() }
         })
     }
     configureDatabases()

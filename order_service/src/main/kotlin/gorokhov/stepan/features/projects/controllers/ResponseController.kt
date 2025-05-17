@@ -34,6 +34,13 @@ class ResponseController : KoinComponent {
                     call.respond(mapOf("status" to "success"))
                 }
 
+                get("/{id}") {
+                    val user = call.principal<AuthenticatedUser>()!!
+                    val responseId = call.parameters["id"]!!
+                    val response = responseService.getResponseById(responseId)
+                    call.respond(response.toDto())
+                }
+
                 get("/freelancer") {
                     val user = call.principal<AuthenticatedUser>()!!
                     val offset = call.request.queryParameters["offset"]?.toLong() ?: 0

@@ -5,18 +5,20 @@ import gorokhov.stepan.features.projects.domain.models.Project
 import gorokhov.stepan.features.projects.domain.models.ProjectStatus
 import gorokhov.stepan.features.projects.domain.models.ProjectWithAuthor
 import gorokhov.stepan.features.projects.domain.repositories.ProjectRepository
+import gorokhov.stepan.features.projects.domain.repositories.ProjectResponseRepository
 import gorokhov.stepan.features.users.domain.UserRepository
 import io.ktor.http.*
 import io.ktor.server.plugins.*
 
 class ProjectService(
     private val projectRepository: ProjectRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val responseRepository: ProjectResponseRepository
 ) {
     suspend fun createProject(project: Project): ProjectWithAuthor {
         val createdProject = projectRepository.createProject(project)
         val user = userRepository.getUser(project.ownerId) ?: throw NotFoundException("User not found")
-        return ProjectWithAuthor(createdProject, user)
+        return ProjectWithAuthor(createdProject, user, isRespond = false)
     }
 
     suspend fun updateProject(userId: String, updatedProject: Project): ProjectWithAuthor {
@@ -26,7 +28,7 @@ class ProjectService(
 
         val project = projectRepository.updateProject(updatedProject)
         val user = userRepository.getUser(project.ownerId) ?: throw NotFoundException("User not found")
-        return ProjectWithAuthor(project, user)
+        return ProjectWithAuthor(project, user, false)
     }
 
     suspend fun closeProject(userId: String, projectId: String) {
@@ -37,10 +39,14 @@ class ProjectService(
         projectRepository.updateProject(updatedProject)
     }
 
-    suspend fun getProject(id: String): ProjectWithAuthor {
-        val project = projectRepository.getProject(id) ?: throw NotFoundException("Project not found")
+    suspend fun getProject(projectId: String, freelancerId: String): ProjectWithAuthor {
+        val project = projectRepository.getProject(projectId) ?: throw NotFoundException("Project not found")
         val user = userRepository.getUser(project.ownerId) ?: throw NotFoundException("User not found")
-        return ProjectWithAuthor(project, user)
+        val isRespond = responseRepository.getResponseByProjectAndFreelancerId(
+            projectId = projectId,
+            freelancerId = freelancerId
+        ) != null
+        return ProjectWithAuthor(project, user, isRespond)
     }
 
     suspend fun getProjects(offset: Long, limit: Int): List<ProjectWithAuthor> {
@@ -61,10 +67,19 @@ class ProjectService(
         }
     }
 
-    private suspend fun getProjectsWithAuthor(provider: suspend () -> List<Project>): List<ProjectWithAuthor> {
+    private suspend fun getProjectsWithAuthor(freelancerId: String? = null, provider: suspend () -> List<Project>): List<ProjectWithAuthor> {
         val projects = provider()
         val users = userRepository.getUsers(projects.map { it.ownerId }.toSet().toList()).associateBy { it.id }
-        return projects.map { ProjectWithAuthor(project = it, author = users[it.ownerId]!!) }
+
+        return projects.map { project ->
+            val isRespond = freelancerId?.let {
+                responseRepository.getResponseByProjectAndFreelancerId(
+                    projectId = project.id,
+                    freelancerId = freelancerId
+                ) != null
+            } ?: false
+            ProjectWithAuthor(project = project, author = users[project.ownerId]!!, isRespond = isRespond)
+        }
     }
 
     companion object {
