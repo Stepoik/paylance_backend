@@ -9,7 +9,7 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.upsert
 
 class FreelancerInfoRepositoryImpl : FreelancerInfoRepository {
     override suspend fun getFreelancerInfo(id: String): FreelancerInfo? = dbQuery {
@@ -30,8 +30,10 @@ class FreelancerInfoRepositoryImpl : FreelancerInfoRepository {
     }
 
     override suspend fun updateFreelancerInfo(freelancerInfo: FreelancerInfo): FreelancerInfo = dbQuery {
-        FreelancerInfos.update({ FreelancerInfos.freelancerId eq freelancerInfo.freelancerId }) {
+        FreelancerInfos.upsert {
+            it[freelancerId] = freelancerInfo.freelancerId
             it[description] = freelancerInfo.description
+            it[skills] = Json.encodeToString(freelancerInfo.skills)
         }
         freelancerInfo
     }

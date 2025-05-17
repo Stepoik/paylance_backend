@@ -24,6 +24,10 @@ class UserService(
         freelancerRepository.createFreelancerInfo(freelancerInfo = freelancerInfo)
         return Freelancer(user = user, info = freelancerInfo, reviews = reviews)
     }
+
+    suspend fun updateFreelancerInfo(freelancerInfo: FreelancerInfo) {
+        freelancerRepository.updateFreelancerInfo(freelancerInfo)
+    }
 }
 
 fun emptyFreelanceInfo(freelancerId: String) = FreelancerInfo(
