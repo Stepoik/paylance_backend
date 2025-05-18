@@ -8,6 +8,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.Job
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -32,10 +33,11 @@ class ProjectController : KoinComponent {
                     projectService.updateProject(userId = user.id, updatedProject = updatedProject)
                 }
 
-                put("/{id}/close") {
+                post("/{id}/close") {
                     val user = call.principal<AuthenticatedUser>()!!
-                    val projectId = call.parameters["id"] ?: return@put call.respond(HttpStatusCode.BadRequest)
+                    val projectId = call.parameters["id"] ?: return@post call.respond(HttpStatusCode.BadRequest)
                     projectService.closeProject(userId = user.id, projectId = projectId)
+                    call.respond(HttpStatusCode.OK)
                 }
 
                 get("/freelancer") {
@@ -64,6 +66,14 @@ class ProjectController : KoinComponent {
                 val offset = call.parameters["offset"]?.toLongOrNull() ?: 0L
                 val limit = call.parameters["limit"]?.toInt() ?: DEFAULT_LIMIT
                 val projects = projectService.getProjects(offset = offset, limit = limit)
+                call.respond(GetProjectsResponse(projects.map { it.toDto() }))
+            }
+
+            get("/search") {
+                val query = call.parameters["q"] ?: return@get call.respond(HttpStatusCode.BadRequest)
+                val offset = call.parameters["offset"]?.toLongOrNull() ?: 0L
+                val limit = call.parameters["limit"]?.toInt() ?: DEFAULT_LIMIT
+                val projects = projectService.searchProjects(query = query, offset = offset, limit = limit)
                 call.respond(GetProjectsResponse(projects.map { it.toDto() }))
             }
         }

@@ -42,6 +42,8 @@ dependencies {
     implementation("com.kborowy:firebase-auth-provider:1.5.0")
     implementation("io.github.damirdenis-tudor:ktor-server-rabbitmq:1.3.3")
 
+    implementation("co.elastic.clients:elasticsearch-java:8.13.0")
+
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")

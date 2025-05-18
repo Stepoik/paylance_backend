@@ -43,6 +43,7 @@ fun Application.module() {
     val application = this
     startKoin {
         modules(module {
+            single { createElasticClient() }
             single { createFirebaseApp() }
             single { FirebaseAuth.getInstance(get()) }
             single<Application> { application }

@@ -14,4 +14,6 @@ interface ProjectRepository {
     suspend fun getProjectsByOwnerId(offset: Long, limit: Int, ownerId: String): List<Project>
 
     suspend fun getProjectsByFreelancerId(offset: Long, limit: Int, freelancerId: String): List<Project>
+
+    suspend fun searchProjects(query: String, offset: Long, limit: Int): List<Project>
 }

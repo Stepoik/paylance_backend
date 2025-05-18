@@ -68,6 +68,12 @@ class ProjectService(
         }
     }
 
+    suspend fun searchProjects(query: String, offset: Long, limit: Int): List<ProjectWithAuthor> {
+        return getProjectsWithAuthor {
+            projectRepository.searchProjects(query = query, offset = offset, limit = limit)
+        }
+    }
+
     private suspend fun getProjectsWithAuthor(freelancerId: String? = null, provider: suspend () -> List<Project>): List<ProjectWithAuthor> {
         val projects = provider()
         val users = userRepository.getUsers(projects.map { it.ownerId }.toSet().toList()).associateBy { it.id }
