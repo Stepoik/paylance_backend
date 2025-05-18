@@ -2,3 +2,4 @@
 **/.idea
 **/firebase-admin.json
 **/.kotlin
+**/.env

@@ -1,10 +1,11 @@
 package gorokhov.stepan.features.projects.domain.services
 
-import gorokhov.stepan.features.chats.domain.repositories.ChatRepository
 import gorokhov.stepan.features.projects.domain.exceptions.HttpException
+import gorokhov.stepan.features.projects.domain.models.GeneratedDescription
 import gorokhov.stepan.features.projects.domain.models.Project
 import gorokhov.stepan.features.projects.domain.models.ProjectStatus
 import gorokhov.stepan.features.projects.domain.models.ProjectWithAuthor
+import gorokhov.stepan.features.projects.domain.repositories.DescriptionGenerator
 import gorokhov.stepan.features.projects.domain.repositories.ProjectRepository
 import gorokhov.stepan.features.projects.domain.repositories.ProjectResponseRepository
 import gorokhov.stepan.features.users.domain.UserRepository
@@ -14,7 +15,8 @@ import io.ktor.server.plugins.*
 class ProjectService(
     private val projectRepository: ProjectRepository,
     private val userRepository: UserRepository,
-    private val responseRepository: ProjectResponseRepository
+    private val responseRepository: ProjectResponseRepository,
+    private val descriptionGenerator: DescriptionGenerator
 ) {
     suspend fun createProject(project: Project): ProjectWithAuthor {
         val createdProject = projectRepository.createProject(project)
@@ -72,6 +74,10 @@ class ProjectService(
         return getProjectsWithAuthor {
             projectRepository.searchProjects(query = query, offset = offset, limit = limit)
         }
+    }
+
+    suspend fun generateDescription(prompt: String): GeneratedDescription {
+        return descriptionGenerator.generateDescription(prompt) ?: throw HttpException(HttpStatusCode.ServiceUnavailable, "Generating error")
     }
 
     private suspend fun getProjectsWithAuthor(freelancerId: String? = null, provider: suspend () -> List<Project>): List<ProjectWithAuthor> {

@@ -12,10 +12,9 @@ import gorokhov.stepan.features.notifications.domain.repositories.NotificationRe
 import gorokhov.stepan.features.notifications.domain.services.NotificationService
 import gorokhov.stepan.features.projects.controllers.ProjectController
 import gorokhov.stepan.features.projects.controllers.ResponseController
-import gorokhov.stepan.features.projects.data.repositories.ContractRepositoryImpl
-import gorokhov.stepan.features.projects.data.repositories.ProjectRepositoryImpl
-import gorokhov.stepan.features.projects.data.repositories.ProjectResponseRepositoryImpl
+import gorokhov.stepan.features.projects.data.repositories.*
 import gorokhov.stepan.features.projects.domain.repositories.ContractRepository
+import gorokhov.stepan.features.projects.domain.repositories.DescriptionGenerator
 import gorokhov.stepan.features.projects.domain.repositories.ProjectRepository
 import gorokhov.stepan.features.projects.domain.repositories.ProjectResponseRepository
 import gorokhov.stepan.features.projects.domain.services.ProjectService
@@ -45,6 +44,7 @@ fun Application.module() {
         modules(module {
             single { createElasticClient() }
             single { createFirebaseApp() }
+            single { createOpenAIClient() }
             single { FirebaseAuth.getInstance(get()) }
             single<Application> { application }
 
@@ -55,7 +55,7 @@ fun Application.module() {
             single { ChatController(get()) }
 
             single { NotificationService(get()) }
-            single { ProjectService(get(), get(), get()) }
+            single { ProjectService(get(), get(), get(), get()) }
             single { UserService(get(), get(), get()) }
             single { ResponseService(get(), get(), get(), get(), get(), get()) }
             single { ChatService(get(), get(), get()) }
@@ -68,6 +68,7 @@ fun Application.module() {
             single<ReviewRepository> { ReviewRepositoryImpl() }
             single<NotificationRepository> { NotificationRepositoryImpl() }
             single<ChatRepository> { ChatRepositoryImpl() }
+            single<DescriptionGenerator> { OpenAIDescriptionGenerator(get()) }
         })
     }
     configureDatabases()

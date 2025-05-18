@@ -60,6 +60,12 @@ class ProjectController : KoinComponent {
                     val project = projectService.getProject(projectId = id, freelancerId = user.id).toDto()
                     call.respond(project)
                 }
+
+                post("/generate-description") {
+                    val request = call.receive<GenerateDescriptionRequest>()
+                    val description = projectService.generateDescription(request.prompt)
+                    call.respond(description.toResponse())
+                }
             }
 
             get {

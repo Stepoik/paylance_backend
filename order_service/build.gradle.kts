@@ -43,6 +43,8 @@ dependencies {
     implementation("io.github.damirdenis-tudor:ktor-server-rabbitmq:1.3.3")
 
     implementation("co.elastic.clients:elasticsearch-java:8.13.0")
+    implementation("com.aallam.openai:openai-client:4.0.1")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
 
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
