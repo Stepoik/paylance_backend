@@ -6,6 +6,7 @@ import gorokhov.stepan.features.projects.domain.models.Project
 import gorokhov.stepan.features.projects.domain.models.ProjectStatus
 import gorokhov.stepan.features.projects.domain.repositories.ProjectRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -23,6 +24,7 @@ class ProjectRepositoryImpl: ProjectRepository {
                 it[createdAt] = project.createdAt
                 it[updatedAt] = project.updatedAt
                 it[ownerId] = project.ownerId
+                it[skills] = Json.encodeToString(project.skills)
             }
             project
         }
@@ -50,6 +52,7 @@ class ProjectRepositoryImpl: ProjectRepository {
                 it[createdAt] = project.createdAt
                 it[updatedAt] = project.updatedAt
                 it[ownerId] = project.ownerId
+                it[skills] = Json.encodeToString(project.skills)
             }
             project
         }
@@ -101,5 +104,6 @@ private fun ResultRow.toProject(): Project = Project(
     status = ProjectStatus.valueOf(this[Projects.status]),
     createdAt = this[Projects.createdAt],
     updatedAt = this[Projects.updatedAt],
-    ownerId = this[Projects.ownerId]
+    ownerId = this[Projects.ownerId],
+    skills = Json.decodeFromString(this[Projects.skills])
 )

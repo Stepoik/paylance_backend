@@ -24,38 +24,22 @@ services:
     depends_on:
       - elasticsearch
 
-  rabbitmq:
-    image: rabbitmq:3.12-management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"   # основной порт RabbitMQ
-      - "15672:15672" # web-интерфейс
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-    healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-
   search-service:
     build: search_service/
     container_name: search-service
     ports:
       - "8081:8081"
     depends_on:
-      rabbitmq:
+      postgres:
         condition: service_healthy
 
-  order-service:
+  project-service:
     build: order_service/
-    container_name: order-service
+    container_name: project-service
     ports:
       - "8080:8080"
     depends_on:
-      rabbitmq:
+      postgres:
         condition: service_healthy
   postgres:
     image: postgres:15
@@ -69,6 +53,12 @@ services:
       - "5432:5432"                 # внешний:внутренний
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U myuser -d mydb" ]
+      interval: 10s        # как часто проверять
+      timeout: 5s          # таймаут одной проверки
+      retries: 5           # сколько раз подряд может не пройти
+      start_period: 15s
 
 volumes:
   esdata:

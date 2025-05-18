@@ -13,6 +13,7 @@ object Projects : Table() {
     val createdAt = datetime("created_at")
     val updatedAt = datetime("updated_at")
     val ownerId = varchar("owner_id", 36)
+    val skills = text("skills")
 
     override val primaryKey = PrimaryKey(id)
 }

@@ -10,4 +10,6 @@ interface ContractRepository {
     suspend fun getClientContracts(clientId: String): List<Contract>
 
     suspend fun updateContract(contract: Contract): Contract
+
+    suspend fun getContractByProjectIdAndUserId(userId: String, projectId: String): Contract?
 }

@@ -2,6 +2,10 @@ package gorokhov.stepan
 
 import com.google.firebase.auth.FirebaseAuth
 import gorokhov.stepan.configurations.*
+import gorokhov.stepan.features.chats.controllers.ChatController
+import gorokhov.stepan.features.chats.data.ChatRepositoryImpl
+import gorokhov.stepan.features.chats.domain.repositories.ChatRepository
+import gorokhov.stepan.features.chats.domain.services.ChatService
 import gorokhov.stepan.features.notifications.controllers.NotificationController
 import gorokhov.stepan.features.notifications.data.NotificationRepositoryImpl
 import gorokhov.stepan.features.notifications.domain.repositories.NotificationRepository
@@ -47,11 +51,13 @@ fun Application.module() {
             single { ResponseController() }
             single { UserController() }
             single { NotificationController(get()) }
+            single { ChatController(get()) }
 
             single { NotificationService(get()) }
             single { ProjectService(get(), get(), get()) }
             single { UserService(get(), get(), get()) }
-            single { ResponseService(get(), get(), get(), get(), get()) }
+            single { ResponseService(get(), get(), get(), get(), get(), get()) }
+            single { ChatService(get(), get(), get()) }
 
             single<ProjectRepository> { ProjectRepositoryImpl() }
             single<UserRepository> { FirebaseUserRepository(get()) }
@@ -60,6 +66,7 @@ fun Application.module() {
             single<FreelancerInfoRepository> { FreelancerInfoRepositoryImpl() }
             single<ReviewRepository> { ReviewRepositoryImpl() }
             single<NotificationRepository> { NotificationRepositoryImpl() }
+            single<ChatRepository> { ChatRepositoryImpl() }
         })
     }
     configureDatabases()
@@ -67,6 +74,7 @@ fun Application.module() {
     configureHTTP()
     configureSerialization()
     configureStatusPages()
+    configureWebsocket()
 
     registerRoutes()
 } 

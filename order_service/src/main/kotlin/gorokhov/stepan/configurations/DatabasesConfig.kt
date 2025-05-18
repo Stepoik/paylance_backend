@@ -1,5 +1,7 @@
 package gorokhov.stepan.configurations
 
+import gorokhov.stepan.features.chats.data.database.Chats
+import gorokhov.stepan.features.chats.data.database.Messages
 import gorokhov.stepan.features.notifications.data.database.Notifications
 import gorokhov.stepan.features.projects.data.database.Contracts
 import gorokhov.stepan.features.projects.data.database.ProjectResponses
@@ -29,7 +31,9 @@ fun Application.configureDatabases() {
             Reviews,
             Contracts,
             ProjectResponses,
-            Notifications
+            Notifications,
+            Chats,
+            Messages
         )
     }
 

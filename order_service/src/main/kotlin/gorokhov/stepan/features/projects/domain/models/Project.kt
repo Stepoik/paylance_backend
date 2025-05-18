@@ -10,9 +10,10 @@ data class Project(
     val description: String,
     val budgetRubles: Double,
     val deadline: LocalDateTime,
+    val skills: List<String>,
     val status: ProjectStatus = ProjectStatus.OPEN,
     val createdAt: LocalDateTime = LocalDateTime.now(),
-    val updatedAt: LocalDateTime = LocalDateTime.now()
+    val updatedAt: LocalDateTime = LocalDateTime.now(),
 )
 
 @Serializable

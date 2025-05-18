@@ -1,5 +1,6 @@
 package gorokhov.stepan.features.projects.domain.services
 
+import gorokhov.stepan.features.chats.domain.repositories.ChatRepository
 import gorokhov.stepan.features.projects.domain.exceptions.HttpException
 import gorokhov.stepan.features.projects.domain.models.Project
 import gorokhov.stepan.features.projects.domain.models.ProjectStatus

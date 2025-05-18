@@ -13,7 +13,8 @@ data class CreateProjectRequest(
     val description: String,
     val budget: Double,
     @Serializable(with = LocalDateTimeSerializer::class)
-    val deadline: LocalDateTime
+    val deadline: LocalDateTime,
+    val skills: List<String>
 )
 
 fun CreateProjectRequest.toModel(userId: String): Project {
@@ -26,6 +27,7 @@ fun CreateProjectRequest.toModel(userId: String): Project {
         createdAt = LocalDateTime.now(),
         updatedAt = LocalDateTime.now(),
         budgetRubles = budget,
-        ownerId = userId
+        ownerId = userId,
+        skills = skills
     )
 }

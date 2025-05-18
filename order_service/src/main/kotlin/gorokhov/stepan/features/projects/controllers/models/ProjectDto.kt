@@ -21,6 +21,7 @@ data class ProjectDto(
     val createdAt: LocalDateTime,
     @Serializable(with = LocalDateTimeSerializer::class)
     val updatedAt: LocalDateTime,
+    val skills: List<String>,
     val isRespond: Boolean
 )
 
@@ -35,6 +36,7 @@ fun ProjectWithAuthor.toDto(): ProjectDto {
         status = project.status,
         createdAt = project.createdAt,
         updatedAt = project.updatedAt,
+        skills = project.skills,
         isRespond = isRespond
     )
 }
