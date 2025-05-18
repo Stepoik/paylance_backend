@@ -77,6 +77,7 @@ fun Application.module() {
     configureSerialization()
     configureStatusPages()
     configureWebsocket()
+    configureLogging()
 
     registerRoutes()
 } 

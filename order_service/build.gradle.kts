@@ -46,6 +46,9 @@ dependencies {
     implementation("com.aallam.openai:openai-client:4.0.1")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
 
+    implementation("io.ktor:ktor-server-call-logging:3.1.1") // или актуальная версия
+    implementation("ch.qos.logback:logback-classic:1.4.11") // для Logback (дефолтный логгер)
+
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
