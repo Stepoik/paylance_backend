@@ -47,7 +47,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DEEPSEEK_API_TOKEN={DEEPSEEK_API_TOKEN}
+      - DEEPSEEK_API_TOKEN=${OPENAPI_TOKEN}
     depends_on:
       postgres:
         condition: service_healthy
