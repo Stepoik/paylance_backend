@@ -9,6 +9,7 @@ import io.ktor.server.response.*
 fun Application.configureStatusPages() {
     install(StatusPages) {
         exception<HttpException> { call, cause ->
+            applicationEnvironment().log.error("Unhandled exception: ${cause.message}", cause)
             call.respond(cause.status, mapOf("message" to cause.message))
         }
     }

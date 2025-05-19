@@ -12,13 +12,4 @@ fun Application.configureLogging() {
         level = Level.INFO
         filter { call -> true }
     }
-
-    install(StatusPages) {
-        exception<Throwable> { call, cause ->
-            // Это покажет причину (stacktrace) ошибки 500
-            applicationEnvironment().log.error("Unhandled exception: ${cause.message}", cause)
-
-            call.respond(HttpStatusCode.InternalServerError, null)
-        }
-    }
 }
