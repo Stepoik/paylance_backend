@@ -47,7 +47,6 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktor_version")
 
     implementation("io.ktor:ktor-server-call-logging:3.1.1") // или актуальная версия
-    implementation("ch.qos.logback:logback-classic:1.4.11") // для Logback (дефолтный логгер)
 
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
@@ -62,4 +61,21 @@ dependencies {
 
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+
+    // Testing
+    testImplementation(enforcedPlatform("org.junit:junit-bom:5.10.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("org.mockito:mockito-core:5.3.1")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("io.kotest:kotest-property:5.5.5")
+    testImplementation("io.kotest:kotest-assertions-core:5.5.5")
+}
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
